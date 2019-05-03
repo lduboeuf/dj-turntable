@@ -112,8 +112,9 @@ unix:!symbian {
         else {
             message(Unix based desktop build)
 
-            CONFIG += mobility
-            MOBILITY += multimedia systeminfo
+            QT += multimedia
+            #CONFIG += mobility
+            #MOBILITY += multimedia systeminfo
             #DEFINES += GE_PULLMODEAUDIO
         }
     }

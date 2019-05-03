@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=turntable
+Exec=turntable
+Icon=assets/turntable.png
+Terminal=false
+Type=Application
+X-Ubuntu-Touch=true
+Name[en_US]=turntable.desktop

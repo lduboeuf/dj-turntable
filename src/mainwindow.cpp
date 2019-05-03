@@ -4,24 +4,31 @@
 
 #include "mainwindow.h"
 
+#include <QSettings>
+#include <QMessageBox>
+#include <QTimer>
 #include <QDebug>
-#include <QtDeclarative>
+#include <QQuickView>
+#include <QQuickWidget>
+#include <QQmlContext>
+#include <QVBoxLayout>
+#include <QDir>
+#include <QQuickItem>
 
 #include "drummachine.h"
 #include "turntable.h"
 
 #ifndef QT_NO_OPENGL
-    #include <QGLWidget>
+#include <QGLWidget>
 #endif
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
 // If OpenGL is not used, we're building for Symbian^1. If that is the case,
 // for performance reasons let's also drop the accelerometer feature.
 #ifndef QT_NO_OPENGL
-    #include <QSystemDeviceInfo>
-    #include "accelerometerfilter.h"
+#include <QSysInfo>
+#include "accelerometerfilter.h"
 
-    QTM_USE_NAMESPACE
 #endif
 #endif
 
@@ -29,39 +36,57 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    m_view = new QDeclarativeView(this);
-    m_view->setAttribute(Qt::WA_NoSystemBackground);
+    m_view = new QQuickView;
+
+
+    //m_view->setAttribute(Qt::WA_NoSystemBackground);
 
 #ifndef QT_NO_OPENGL
     // Use QGLWidget to get the opengl support if available
     QGLFormat format = QGLFormat::defaultFormat();
     format.setSampleBuffers(false);
 
-    QGLWidget *glWidget = new QGLWidget(format);
+    QGLWidget *glWidget = new QGLWidget(format, this);
     glWidget->setAutoFillBackground(false);
-    m_view->setViewport(glWidget);     // ownership of glWidget is taken
+
+//    QVBoxLayout *layout = new QVBoxLayout;
+//    layout->addWidget(glWidget);
+//    this->setLayout(layout);
+
+    //this->layout()->addWidget(glWidget);
+
+    //TODO m_view->(glWidget);     // ownership of glWidget is taken
 #endif
 
-    m_view->setSource(QUrl("qrc:/qml/SplashScreen.qml"));
-    m_view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
-    setCentralWidget(m_view);
+    //m_view->setSource(QUrl("qrc:/qml/SplashScreen.qml"));
+   // m_view->setResizeMode(QQuickView::SizeRootObjectToView);
+
+
+
+    QWidget *container = QWidget::createWindowContainer(m_view, this);
+
+initializeQMLComponent();
+    setCentralWidget(container);
+
+
 
     // To delay the loading of main QML file so that the splash screen
     // would show, we use single shot timer.
-    QTimer::singleShot(0, this, SLOT(initializeQMLComponent()));
+    //QTimer::singleShot(0, this, SLOT(initializeQMLComponent()));
 }
 
 
 void MainWindow::initializeQMLComponent()
 {
-    QDeclarativeContext *context = m_view->rootContext();
+    QQmlContext *context = m_view->rootContext();
+
 
 #if defined(Q_WS_MAEMO_5) || defined(QT_NO_OPENGL)
     // Set UI to low performance mode for Maemo5 and Symbian^1. This mainly
     // disables antialiasing on some performance costly elements.
-    context->setContextProperty("lowPerf", true);
+    context->setContextProperty("lowPerf", QVariant(true));
 #else
-    context->setContextProperty("lowPerf", false);
+    context->setContextProperty("lowPerf", QVariant(false));
 #endif
 
 #ifdef Q_OS_SYMBIAN
@@ -69,16 +94,18 @@ void MainWindow::initializeQMLComponent()
 #else
     context->setContextProperty("sampleFolder", QString("file:/") +
                                 QDir::currentPath());
+    qDebug() << QDir::currentPath();
 #endif
 
 #ifdef Q_WS_MAEMO_6
     // Hide the exit button in Harmattan
-    context->setContextProperty("exitButtonVisible", false);
+    context->setContextProperty("exitButtonVisible", QVariant(false));
 #else
-    context->setContextProperty("exitButtonVisible", true);
+    context->setContextProperty("exitButtonVisible", QVariant(true));
 #endif
 
     m_view->setSource(QUrl("qrc:/qml/Main.qml"));
+    m_view->setResizeMode(QQuickView::SizeRootObjectToView);
 
     // Create Qt settings object to load / store app settings
     m_settings = new QSettings("Nokia", "DJTurntable");
@@ -167,15 +194,15 @@ void MainWindow::initializeQMLComponent()
     m_accelerometer->setDataRate(50);
 
     // Create Qt objects for accessing profile information
-    m_deviceInfo = new QSystemDeviceInfo(this);
-    m_turntable->profile(m_deviceInfo->currentProfile());
+    //m_deviceInfo = new QSysInfo;
+    //TODO    m_turntable->profile(m_deviceInfo->currentProfile());
 
     connect(m_accelerometerFilter, SIGNAL(rotationChanged(QVariant)),
             turntableQML, SLOT(inclination(QVariant)));
-    connect(m_deviceInfo,
-            SIGNAL(currentProfileChanged(QSystemDeviceInfo::Profile)),
-            m_turntable,
-            SLOT(profile(QSystemDeviceInfo::Profile)));
+    //   TODO connect(m_deviceInfo,
+    //            SIGNAL(currentProfileChanged(QSystemDeviceInfo::Profile)),
+    //            m_turntable,
+    //            SLOT(profile(QSystemDeviceInfo::Profile)));
 
     // Begin the measuring of the accelerometer sensor
     m_accelerometer->start();

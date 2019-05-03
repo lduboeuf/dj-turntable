@@ -5,10 +5,9 @@
 #ifndef ACCELEROMETERFILTER_H
 #define ACCELEROMETERFILTER_H
 
-#include <QAccelerometerFilter>
+#include <QtSensors/QAccelerometerFilter>
 #include <QVariant>
 
-QTM_USE_NAMESPACE
 
 class AccelerometerFilter : public QObject, public QAccelerometerFilter
 {

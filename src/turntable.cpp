@@ -339,6 +339,7 @@ void Turntable::seekToPosition(QVariant position)
 /*!
   Mutes the sound if silent profile is chosen.
 */
+/*TODO
 void Turntable::profile(QSystemDeviceInfo::Profile profile)
 {
     if (profile == QSystemDeviceInfo::SilentProfile) {
@@ -358,4 +359,5 @@ void Turntable::profile(QSystemDeviceInfo::Profile profile)
     }
 #endif
 }
+*/
 #endif

@@ -175,3 +175,4 @@ plugin_commonU.def
 *.orig
 *.rej
 
+build*

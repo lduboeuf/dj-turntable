@@ -16,8 +16,7 @@
 #include "vorbisdecoder.h"
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
-    #include <QSystemDeviceInfo>
-    QTM_USE_NAMESPACE
+    #include <QSysInfo>
 #endif
 
 #if defined(Q_OS_SYMBIAN) && !defined(Q_OS_SYMBIAN_1)
@@ -58,7 +57,7 @@ public slots:
     void seekToPosition(QVariant position);
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
-    void profile(QSystemDeviceInfo::Profile profile);
+    //TODO void profile(QSystemDeviceInfo::Profile profile);
 #endif
 
     int pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength);

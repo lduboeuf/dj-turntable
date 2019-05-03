@@ -5,7 +5,6 @@
 #include <math.h>
 #include "accelerometerfilter.h"
 
-QTM_USE_NAMESPACE
 
 /*!
   \class AccelerometerFilter

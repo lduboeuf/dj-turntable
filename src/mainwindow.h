@@ -8,19 +8,19 @@
 #include <QMainWindow>
 #include <QPointer>
 
-class QDeclarativeView;
+class QQuickView;
 class QSettings;
 class QSplashScreen;
 class Turntable;
 class DrumMachine;
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
-#include <QAccelerometer>
-#include <QSystemDeviceInfo>
+#include <QtSensors/QAccelerometer>
+#include <QSysInfo>
 
 class AccelerometerFilter;
 
-QTM_USE_NAMESPACE
+
 #endif
 
 
@@ -35,7 +35,7 @@ public slots:
     void initializeQMLComponent();
 
 protected:
-    QDeclarativeView *m_view; // Owned
+    QQuickView *m_view; // Owned
     QSettings *m_settings; // Owned
     QPointer<Turntable> m_turntable; // Owned
     QPointer<DrumMachine> m_drumMachine; // Owned
@@ -43,7 +43,7 @@ protected:
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
     QAccelerometer *m_accelerometer; // Owned
     QPointer<AccelerometerFilter> m_accelerometerFilter; // Owned
-    QPointer<QSystemDeviceInfo> m_deviceInfo; // Owned
+    //QPointer<QSysInfo> m_deviceInfo; // Owned
 #endif
 };
 

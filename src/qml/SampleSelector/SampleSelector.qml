@@ -2,8 +2,8 @@
  * Copyright (c) 2011-2012 Nokia Corporation.
  */
 
-import QtQuick 1.0
-import Qt.labs.folderlistmodel 1.0
+import QtQuick 2.6
+import Qt.labs.folderlistmodel 2.2
 
 Image {
     id: selector
@@ -179,7 +179,10 @@ Image {
         FolderListModel {
             id: folderModel
 
-            folder: "file:/c:/"
+            onFolderChanged: console.log(folder)
+            folder: "file://"
+
+            //folder: "file:/c:/"
             nameFilters: [ "*.wav", "*.ogg" ]
         }
 
@@ -219,7 +222,7 @@ Image {
                         }
 
                         if (folderModel.isFolder(index)) {
-                            selector.setFolder(filePath)
+                            selector.setFolder("file://" + filePath)
                         } else {
                             selector.sampleSelected(filePath)
                         }

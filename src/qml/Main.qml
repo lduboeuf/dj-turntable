@@ -2,24 +2,27 @@
  * Copyright (c) 2011-2012 Nokia Corporation.
  */
 
-import QtQuick 1.0
+import QtQuick 2.3
 import "SampleSelector"
 import "DrumMachine"
 import "Turntable"
 import "MixerPanel"
 import "HelpScreen"
 
-Rectangle {
+import QtQuick.Controls 2.2
+
+ApplicationWindow {
     id: ui
-    anchors.fill: parent
+    //anchors.fill: parent
     width: 640
+    visible: true
     height: 360
     color: "black"
-    focus: true
+    //focus: true
 
     // Used when developing with QML Viewer, property is added as
     // context property by Qt in the real application
-    // property bool lowPerf: false
+    //property bool lowPerf: false
 
     signal diskSpeed(variant speed)
     signal diskAimSpeed(variant speed)

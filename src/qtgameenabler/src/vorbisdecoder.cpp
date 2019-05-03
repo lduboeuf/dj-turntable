@@ -348,7 +348,7 @@ unsigned char *VorbisDecoder::decodeAll(unsigned int *len)
         if (!vorbisDecode(m_readData, rlen, &leftover, false) ||
             !m_decSamplesLen) {
             DEBUG_INFO("vorbisDecode failed");
-            return false;
+            return NULL;
         }
         m_readPos += rlen - leftover;
 

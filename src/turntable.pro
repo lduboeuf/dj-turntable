@@ -1,6 +1,7 @@
 # Copyright (c) 2011-2012 Nokia Corporation.
 
-QT += core gui declarative opengl
+QT += core gui quick opengl sensors
+CONFIG += c++11
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE = app
@@ -10,7 +11,7 @@ VERSION = 1.4.1
 SOURCES += \
     main.cpp \
     drummachine.cpp \
-    mainwindow.cpp \
+    #mainwindow.cpp \
     turntable.cpp
 
 OTHER_FILES += \
@@ -26,7 +27,7 @@ RESOURCES += turntable.qrc
 
 HEADERS += \
     drummachine.h \
-    mainwindow.h \
+    #mainwindow.h \
     turntable.h
 
 
@@ -65,7 +66,8 @@ unix:!symbian {
         desktop.path = $$DATADIR/applications/hildon
         desktop.files += qtc_packaging/debian_fremantle/$${TARGET}.desktop
     }
-    else {
+
+    Harmattan {
         # Harmattan specific
         DEFINES += Q_WS_MAEMO_6
 
@@ -134,6 +136,21 @@ symbian {
 
     TARGET.EPOCHEAPSIZE = 0x100000 0x4000000
     TARGET.EPOCSTACKSIZE = 0x14000
+}
+
+UBUNTU_TOUCH {
+    message("building for Ubuntu Touch")
+
+    DEFINES += Q_WS_MAEMO_6 #reuse rules for MAEMO OS
+
+    HEADERS += accelerometerfilter.h
+    SOURCES += accelerometerfilter.cpp
+
+    target.path = /
+    click_files.path = /
+    click_files.files = $$PWD/qtc_packaging/ubuntu_touch/*
+
+    INSTALLS+=click_files
 }
 
 include(qtgameenabler/qtgameenableraudio.pri)

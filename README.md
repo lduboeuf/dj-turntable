@@ -285,6 +285,11 @@ to do so (e.g. root access).
 Once the application is installed, locate the application icon from the
 application menu and launch the application by tapping the icon.
 
+5.5 Ubuntu Touch
+----------------
+
+from `src` folder run `clickable -c qtc_packaging/ubuntu_touch/clickable.json`
+
 
 6. License
 -------------------------------------------------------------------------------

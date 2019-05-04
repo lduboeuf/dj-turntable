@@ -1,4 +1,5 @@
 {
-    "policy_groups": ["sensors","audio"],
+    "policy_groups": ["sensors","audio","content_exchange","music_files_read"],
+    "read_path": ["@{HOME}/Music/"],
     "policy_version": 16.04
 }

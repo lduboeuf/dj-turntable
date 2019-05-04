@@ -33,7 +33,13 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
+
+
     QApplication app(argc, argv);
+    app.setOrganizationName("turntable.lduboeuf");
+    app.setApplicationName("turntable.lduboeuf");
+
+    qDebug() << QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 
 
     // Lock orientation in Symbian
@@ -72,8 +78,9 @@ int main(int argc, char *argv[])
 
 
 context->setContextProperty("sampleFolder", QString("file://") +
-                            QDir::currentPath()); //TODO may point to another folder
-qDebug() << QDir::currentPath();
+                            QStandardPaths::standardLocations(QStandardPaths::MusicLocation)[0]); //TODO may point to another folder
+                            //QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + QDir::separator() + "samples"
+                            //qDebug() << QDir::currentPath();
 
 
 #ifdef Q_WS_MAEMO_6

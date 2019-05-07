@@ -8,6 +8,7 @@ BorderImage {
     id: toggleSwitch
 
     property int selectedTickGroup: 1
+    property bool animate: true
 
     width: 300
     height: 40
@@ -38,7 +39,9 @@ BorderImage {
             left: parent.left
             right: parent.horizontalCenter
         }
-        onClicked: toggleSwitch.selectedTickGroup = 1
+        onClicked: {
+            toggleSwitch.selectedTickGroup = 1
+        }
     }
 
     MouseArea {
@@ -48,7 +51,9 @@ BorderImage {
             left: parent.horizontalCenter
             right: parent.right
         }
-        onClicked: toggleSwitch.selectedTickGroup = 2
+        onClicked:{
+            toggleSwitch.selectedTickGroup = 2
+        }
     }
 
     Image {
@@ -65,6 +70,25 @@ BorderImage {
         source: "../images/tickgroupselectorslider.png"
 
         x: toggleSwitch.selectedTickGroup == 2 ? toggleSwitch.width / 2 - 4 : 4
+
+        Image {
+            id:animateLed
+                    anchors {
+                        //top: parent.top
+                        right: parent.right
+                        rightMargin: parent.height * 0.2
+                        verticalCenter: parent.verticalCenter
+
+                    }
+                    width: knob.width * 0.1
+                    height: width
+                    smooth: true
+
+                    source: toggleSwitch.animate
+                            ? "../images/led_off.png"
+                            : "../images/led_on.png"
+                }
+
 
         Behavior on x {
             NumberAnimation {
@@ -88,6 +112,20 @@ BorderImage {
                     toggleSwitch.selectedTickGroup = 2
                     toggleSwitch.selectedTickGroup = 1
                 }
+            }
+
+            onClicked: {
+                if (knob.x > (toggleSwitch.width / 4)) {
+                    if (toggleSwitch.selectedTickGroup == 2){
+                        toggleSwitch.animate = !toggleSwitch.animate
+                    }
+                }else{
+                    if (toggleSwitch.selectedTickGroup == 1){
+                        toggleSwitch.animate = !toggleSwitch.animate
+                    }
+                }
+
+
             }
         }
     }

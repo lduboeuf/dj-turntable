@@ -11,6 +11,7 @@ Image {
 
     property string sampleFile
     property alias folder: folderModel.folder
+    property int folderLevel: 0
 
     // Used as Qt signals
     signal sampleSelected(variant sample)
@@ -110,7 +111,7 @@ Image {
         id: folderUp
 
         property bool pressed: false
-
+        enabled: selector.folderLevel>0
         anchors {
             top: parent.top
             topMargin: 10
@@ -141,6 +142,7 @@ Image {
     }
 
     MouseArea {
+        enabled: selector.folderLevel>0
         anchors {
             top: parent.top
             bottom: folderHole.top
@@ -159,7 +161,10 @@ Image {
             folderUp.scale = 1.0
         }
 
-        onClicked: selector.setFolder(folderModel.parentFolder)
+        onClicked: {
+            selector.folderLevel--
+            selector.setFolder(folderModel.parentFolder)
+        }
     }
 
 
@@ -222,6 +227,7 @@ Image {
                         }
 
                         if (folderModel.isFolder(index)) {
+                            selector.folderLevel++
                             selector.setFolder("file://" + filePath)
                         } else {
                             selector.sampleSelected(filePath)

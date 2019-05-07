@@ -28,11 +28,20 @@ Image {
             ledOn = true
         }
 
-        if (tick < 16) {
-            tickGroupSelector.selectedTickGroup = 1
-        } else {
-            tickGroupSelector.selectedTickGroup = 2
+        if (tickGroupSelector.animate){
+            if (tick < 16) {
+                tickGroupSelector.selectedTickGroup = 1
+            } else {
+                tickGroupSelector.selectedTickGroup = 2
+            }
         }
+
+//TODO be able to pin a tick
+//        if (tick < 16) {
+//            tickGroupSelector.selectedTickGroup = 1
+//        } else {
+//            tickGroupSelector.selectedTickGroup = 2
+//        }
 
         highligher.x = drumGrid.children[tick].x
     }

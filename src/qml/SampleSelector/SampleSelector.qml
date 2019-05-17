@@ -4,6 +4,7 @@
 
 import QtQuick 2.6
 import Qt.labs.folderlistmodel 2.2
+import QtGraphicalEffects 1.0
 
 Image {
     id: selector
@@ -73,10 +74,9 @@ Image {
         }
     }
 
-    Image {
-        id: defaultSampleButton
-
-        property bool pressed: false
+    //ubuntu touch Content Hub Import File Handler using Content Hub
+    Item {
+        id: importFile
 
         anchors {
             top: backButton.bottom
@@ -86,24 +86,35 @@ Image {
         }
         width: backButton.width
         height: backButton.height
-        source: pressed ? "../images/defaultsample_on.png"
-                        : "../images/defaultsample.png"
-        smooth: true
 
-        MouseArea {
+        //import
+        Loader {
+            id: utFilePicker
             anchors.fill: parent
-            onPressed: {
-                defaultSampleButton.pressed = true
-                defaultSampleButton.scale = 0.9
-            }
+            //anchors.left: btnContainer.left
+            //anchors.centerIn: parent
+            Component.onCompleted: {
+                if (typeof UBUNTU_TOUCH !== "undefined"){
 
-            onReleased: {
-                defaultSampleButton.pressed = false
-                defaultSampleButton.scale = 1.0
-            }
+                    //convert nameFilters for utFilePicker
+                    var extensions = []
+                    for (var j = 0; j < folderModel.nameFilters.length; j++){
+                        var filter = folderModel.nameFilters[j]
+                        var allowedExtension = filter.substring(filter.length-3,filter.length)
+                        extensions.push(allowedExtension)
 
-            onClicked: selector.defaultSample()
+                    }
+                    utFilePicker.setSource("../Platform/UbuntuTouch/UTFileImport.qml", {nameFilters: extensions})
+                }
+            }
         }
+
+        Connections{
+            target: utFilePicker.item
+            onFilesAdded: errorDialog.show(qsTr("file imported"))
+        }
+
+
     }
 
 
@@ -277,11 +288,49 @@ Image {
         }
     }
 
+    Image {
+        id: defaultSampleButton
+
+        property bool pressed: false
+
+        anchors {
+            left: folderHole.left
+            leftMargin: 5
+            bottom: parent.bottom
+            bottomMargin: 10
+        }
+        width: nowPlayingText.height
+        height: nowPlayingText.height
+        source: "../images/redo.svg"
+        smooth: true
+
+        MouseArea {
+            anchors.fill: parent
+            onPressed: {
+                defaultSampleButton.pressed = true
+                defaultSampleButton.scale = 0.9
+            }
+
+            onReleased: {
+                defaultSampleButton.pressed = false
+                defaultSampleButton.scale = 1.0
+            }
+
+            onClicked: selector.defaultSample()
+        }
+        ColorOverlay {
+               anchors.fill: defaultSampleButton
+               source: defaultSampleButton
+               color: "white"
+           }
+    }
+
+
     Text {
         id: nowPlayingText
 
         anchors {
-            left: folderHole.left
+            left: defaultSampleButton.right
             leftMargin: 5
             bottom: parent.bottom
             bottomMargin: 10
@@ -292,6 +341,7 @@ Image {
     }
 
     Text {
+        id:nowPlayingFile
         color: "white"
         text: selector.sampleFile
         elide: Text.ElideLeft
@@ -302,6 +352,8 @@ Image {
             right: backButton.left
         }
     }
+
+
 
     Dialog {
         id: errorDialog

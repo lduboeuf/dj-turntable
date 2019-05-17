@@ -1,5 +1,4 @@
 # Copyright (c) 2011-2012 Nokia Corporation.
-
 QT += core gui quick opengl sensors
 CONFIG += c++11
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -81,7 +80,6 @@ unix:!symbian {
 
         desktop.path = $$DATADIR/applications
         desktop.files += qtc_packaging/debian_harmattan/$${TARGET}.desktop
-
         gameclassify.path = /usr/share/policy/etc/syspart.conf.d
         gameclassify.files += qtc_packaging/debian_harmattan/$${TARGET}.conf
 
@@ -141,10 +139,13 @@ symbian {
 UBUNTU_TOUCH {
     message("building for Ubuntu Touch")
 
-    DEFINES += Q_WS_MAEMO_6 #reuse rules for MAEMO OS
+    DEFINES += Q_WS_MAEMO_6 \#reuse rules for MAEMO OS
+                Q_OS_UBUNTU_TOUCH
 
-    HEADERS += accelerometerfilter.h
-    SOURCES += accelerometerfilter.cpp
+    HEADERS += accelerometerfilter.h \
+                utfilemgr.h
+    SOURCES += accelerometerfilter.cpp \
+                utfilemgr.cpp
 
     target.path = /
     click_files.path = /

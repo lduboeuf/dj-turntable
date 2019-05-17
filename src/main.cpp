@@ -13,6 +13,8 @@
 #include <turntable.h>
 #include <drummachine.h>
 
+#include <utfilemgr.h>
+
 class QSettings;
 //class Turntable;
 //class DrumMachine;
@@ -37,7 +39,7 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
     app.setOrganizationName("turntable.lduboeuf");
-    app.setApplicationName("turntable.lduboeuf");
+    app.setApplicationName("turntable");
 
     qDebug() << QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 
@@ -76,14 +78,23 @@ int main(int argc, char *argv[])
     context->setContextProperty("lowPerf", QVariant(false));
 #endif
 
+    QString sampleFolder;
+#ifdef Q_OS_UBUNTU_TOUCH
+    sampleFolder = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    UTFileMgr fileManager(sampleFolder);
+    engine.rootContext()->setContextProperty("UBUNTU_TOUCH", true);
+    engine.rootContext()->setContextProperty("utFileManager", &fileManager);
+    context->setContextProperty("exitButtonVisible", QVariant(true));
+#else
+    sampleFolder = QStandardPaths::standardLocations(QStandardPaths::MusicLocation)[0];
+#endif
 
-context->setContextProperty("sampleFolder", QString("file://") +
-                            QStandardPaths::standardLocations(QStandardPaths::MusicLocation)[0]); //TODO may point to another folder
-                            //QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + QDir::separator() + "samples"
-                            //qDebug() << QDir::currentPath();
+    context->setContextProperty("sampleFolder", sampleFolder);
+    //QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + QDir::separator() + "samples"
+    //qDebug() << QDir::currentPath();
 
 
-#ifdef Q_WS_MAEMO_6
+#if defined Q_WS_MAEMO_6 && !defined Q_OS_UBUNTU_TOUCH
     // Hide the exit button in Harmattan
     context->setContextProperty("exitButtonVisible", QVariant(false));
 #else
@@ -97,9 +108,9 @@ context->setContextProperty("sampleFolder", QString("file://") +
     QObject *rootObject = dynamic_cast<QObject*>(engine.rootObjects()[0]);
 
     // Create Qt settings object to load / store app settings
-    QSettings *m_settings = new QSettings("Nokia", "DJTurntable");
-    Turntable *m_turntable = new Turntable(m_settings, rootObject);
-    DrumMachine *m_drumMachine = new DrumMachine(m_settings, rootObject);
+    QSettings m_settings;
+    Turntable *m_turntable = new Turntable(&m_settings, rootObject);
+    DrumMachine *m_drumMachine = new DrumMachine(&m_settings, rootObject);
 
     m_turntable->addAudioSource(m_drumMachine);
 
@@ -190,8 +201,8 @@ context->setContextProperty("sampleFolder", QString("file://") +
     //m_deviceInfo = new QSysInfo;
     //TODO    m_turntable->profile(m_deviceInfo->currentProfile());
 
-     QObject::connect(m_accelerometerFilter, SIGNAL(rotationChanged(QVariant)),
-            turntableQML, SLOT(inclination(QVariant)));
+    QObject::connect(m_accelerometerFilter, SIGNAL(rotationChanged(QVariant)),
+                     turntableQML, SLOT(inclination(QVariant)));
     //   TODO connect(m_deviceInfo,
     //            SIGNAL(currentProfileChanged(QSystemDeviceInfo::Profile)),
     //            m_turntable,

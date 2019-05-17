@@ -160,7 +160,7 @@ ApplicationWindow {
             onBackPressed: flickable.setState(flickable.prevState)
 
             // sampleFolder is context property and it is set from Qt
-            folder: sampleFolder
+            folder: "file://" + sampleFolder
         }
 
         DrumMachine {

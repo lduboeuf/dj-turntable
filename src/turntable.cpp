@@ -229,6 +229,7 @@ void Turntable::openSample(const QString &filePath)
 
     // Save the succesfully loaded sample to the persistent storage
     m_Settings->setValue("LastSample", parsedFilePath);
+    qDebug() << "LastSample:" +  parsedFilePath;
 
     emit sampleOpened(parsedFilePath);
 }

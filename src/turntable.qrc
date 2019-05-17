@@ -7,7 +7,7 @@
         <file>qml/Turntable/Turntable.qml</file>
         <file>qml/Turntable/SpeedSlider.qml</file>
         <file>qml/Turntable/Arm.qml</file>
-		<file>qml/MixerPanel/MixerPanel.qml</file>
+        <file>qml/MixerPanel/MixerPanel.qml</file>
         <file>qml/MixerPanel/KnobDial.qml</file>
         <file>qml/MixerPanel/LCDDisplay.qml</file>
         <file>qml/MixerPanel/LCDDigit.qml</file>
@@ -75,5 +75,10 @@
         <file>sounds/cymbal.wav</file>
         <file>sounds/cowbell.wav</file>
         <file>sounds/bassd.wav</file>
+        <file>qml/images/redo.svg</file>
+        <file>qml/Platform/UbuntuTouch/UTFileImportHandler.qml</file>
+        <file>qml/Platform/UbuntuTouch/UTFileImport.qml</file>
+        <file>qml/Platform/UbuntuTouch/import.png</file>
+        <file>qml/Platform/UbuntuTouch/import_on.png</file>
     </qresource>
 </RCC>

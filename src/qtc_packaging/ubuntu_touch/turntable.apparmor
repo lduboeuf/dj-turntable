@@ -1,4 +1,4 @@
 {
-    "policy_groups": ["sensors","audio","content_exchange","music_files_read"],
+    "policy_groups": ["sensors","audio","content_exchange"],
     "policy_version": 16.04
 }

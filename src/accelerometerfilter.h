@@ -24,6 +24,7 @@ signals:
 
 private:
     qreal m_prevValue;
+    void applyOrientation(qreal* x, qreal* y, qreal* z);
 };
 
 #endif // ACCELEROMETERFILTER_H

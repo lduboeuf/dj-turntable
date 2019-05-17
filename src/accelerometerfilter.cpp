@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include "accelerometerfilter.h"
+#include <QDebug>
 
 
 /*!
@@ -14,7 +15,36 @@
 AccelerometerFilter::AccelerometerFilter()
     : m_prevValue(0.0f)
 {
+   // qDebug() << Qt::ScreenOrientation();
 }
+
+void AccelerometerFilter::applyOrientation(qreal* x, qreal* y, qreal* z)
+{
+    Q_UNUSED(z);
+    const qreal xx = *x, yy = *y;
+    //QScreen* screen = QScreen::orientation();
+
+    switch (Qt::ScreenOrientation())
+    {
+    case Qt::PortraitOrientation:
+        break;
+    case Qt::LandscapeOrientation:
+        *x = -yy;
+        *y = xx;
+        break;
+    case Qt::InvertedPortraitOrientation:
+        *x = -xx;
+        *y = -yy;
+        break;
+    case Qt::InvertedLandscapeOrientation:
+        *x = yy;
+        *y = -xx;
+        break;
+    default:
+        break;
+    }
+}
+
 
 /*!
   Called when accelerometer \a reading changes.
@@ -27,6 +57,12 @@ bool AccelerometerFilter::filter(QAccelerometerReading *reading)
     qreal rx = reading->x();
     qreal ry = reading->y();
     qreal rz = reading->z();
+
+    //qDebug() << Qt::ScreenOrientation();
+
+    //applyOrientation(&rx, &ry, &rz);
+
+    //qDebug("accel: %f %f %f", rx, ry, rz);
 
     qreal divider = sqrt(rx * rx + ry * ry + rz * rz);
 

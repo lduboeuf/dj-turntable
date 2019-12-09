@@ -147,6 +147,14 @@ UBUNTU_TOUCH {
     SOURCES += accelerometerfilter.cpp \
                 utfilemgr.cpp
 
+    # figure out the current build architecture
+    CLICK_ARCH=$$system(dpkg-architecture -qDEB_HOST_ARCH)
+
+    QMAKE_SUBSTITUTES += $$PWD/qtc_packaging/ubuntu_touch/manifest.json.in
+    manifest.files = qtc_packaging/ubuntu_touch/manifest.json
+    manifest.path = /
+    INSTALLS += manifest
+
     target.path = /
     click_files.path = /
     click_files.files = $$PWD/qtc_packaging/ubuntu_touch/*

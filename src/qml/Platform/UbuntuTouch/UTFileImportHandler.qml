@@ -39,10 +39,8 @@ Popups.PopupBase {
             handler: ContentHandler.Source
 
             onPeerSelected: {
-
                 peer.selectionType = ContentTransfer.Single
                 picker.activeTransfer = peer.request()
-
             }
 
             onCancelPressed: {
@@ -59,23 +57,12 @@ Popups.PopupBase {
             if (picker.activeTransfer.state === ContentTransfer.Charged) {
                 var selectedItems = []
                 for(var i in picker.activeTransfer.items) {
-
                     selectedItems.push(String(picker.activeTransfer.items[i].url).replace("file://", ""))
                 }
                 //utPicker.storeFiles(selectedItems)
                 picker.accept(selectedItems)
                 picker.hide()
             }
-
-
-
-
-
         }
     }
-
-
-
-
-
 }

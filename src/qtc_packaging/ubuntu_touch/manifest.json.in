@@ -6,7 +6,8 @@
     \"hooks\": {
         \"todos\": {
             \"apparmor\": \"turntable.apparmor\",
-            \"desktop\":  \"turntable.desktop\"
+            \"desktop\":  \"turntable.desktop\",
+            \"content-hub\": \"turntable-contenthub.json\"
         }
     },
     \"version\": \"0.3\",

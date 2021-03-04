@@ -40,7 +40,16 @@ void UTFileMgr::importFile(QString url){
    }else{
         qWarning() << "Error while copying:" + url + " to:" + destFile;
    }
+   emit fileImported(destFile);
 
+}
+
+void UTFileMgr::removeFile(QString filePath)
+{
+    QFileInfo file(filePath);
+    if (file.exists()) {
+        QFile::remove(filePath);
+    }
 
 }
 

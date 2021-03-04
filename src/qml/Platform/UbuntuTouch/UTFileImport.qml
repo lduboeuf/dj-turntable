@@ -1,15 +1,16 @@
 import QtQuick 2.4
 import QtQuick.Controls 2.2
-
+import Ubuntu.Content 1.3 as ContentHub
 
 Item {
 
     id:utPicker
     anchors.fill:parent
-    property var nameFilters :[]
+    property var nameFilters :["wav","ogg"]
     property string msg: qsTr("Import files")
 
     signal filesAdded
+    signal error(string errorMsg)
 
 
     //check for allowed extensions
@@ -31,14 +32,13 @@ Item {
             var ok = isRightFileType(items[i])
             if (ok) {
                 utFileManager.importFile(items[i])
-                utPicker.msg = qsTr("File added to playlist")
+                utPicker.filesAdded()
             }else{
-                utPicker.msg = qsTr("Wrong extension type")
+                utPicker.error(qsTr("Sorry, only wav and ogg files are supported"))
             }
 
         }
 
-        utPicker.filesAdded()
     }
 
 
@@ -71,20 +71,29 @@ Item {
             id:toolTip
             //delay: 1000
             timeout: 2000
-            visible:btnImport.pressed
+            //visible:btnImport.pressed
             text: utPicker.msg
         }
     }
-
-
-
 
     UTFileImportHandler{
         id: picker
         onAccept: utPicker.storeFiles(files)
     }
 
+    Connections {
+        target: ContentHub.ContentHub
 
+        onImportRequested: {
+            if (transfer.state === ContentHub.ContentTransfer.Charged) {
+                var urls = []
+                for(var i=0; i < transfer.items.length; i++) {
+                    urls.push(String(transfer.items[0].url).replace('file://', ''))
+                }
+                utPicker.storeFiles(urls)
+            }
+        }
+    }
 
 
 

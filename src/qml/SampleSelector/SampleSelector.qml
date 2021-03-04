@@ -3,6 +3,7 @@
  */
 
 import QtQuick 2.6
+//import QtQuick.Controls 2.2
 import Qt.labs.folderlistmodel 2.2
 import QtGraphicalEffects 1.0
 
@@ -111,12 +112,15 @@ Image {
 
         Connections{
             target: utFilePicker.item
-            onFilesAdded: errorDialog.show(qsTr("file imported"))
+            onFilesAdded: {
+                errorDialog.show(qsTr("file imported"))
+                selector.sampleSelected()
+            }
+            onError: {
+                errorDialog.show(errorMsg)
+            }
         }
-
-
     }
-
 
     Image {
         id: folderUp
@@ -207,14 +211,15 @@ Image {
 
             Item {
                 width: view.width
-                height: 40
+                height: 50
 
                 Behavior on scale { PropertyAnimation { duration: 50 } }
 
                 Image {
                     id: icon
                     width: height
-                    height: parent.height
+                    height: parent.height * 0.83607
+                    anchors.verticalCenter: parent.verticalCenter
                     source: folderModel.isFolder(index) ? "../images/iconfolder.png"
                                                         : "../images/iconsample.png"
                     smooth: true
@@ -236,12 +241,45 @@ Image {
                         if (fileName === "") {
                             return
                         }
+                        view.currentIndex = index
 
                         if (folderModel.isFolder(index)) {
                             selector.folderLevel++
                             selector.setFolder("file://" + filePath)
                         } else {
                             selector.sampleSelected(filePath)
+                        }
+                    }
+
+                    onPressAndHold: {
+                        removePopover.visible = true
+                    }
+                }
+
+                Image {
+                    id: removeButton
+                    z:10
+
+                    property bool pressed: false
+                    visible: (typeof UBUNTU_TOUCH !== "undefined") && index == view.currentIndex
+
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        right: parent.right
+                        rightMargin: 5
+                    }
+                    width: height
+                    height: parent.height * 0.6
+                    source: pressed ? "../images/exit_on.png"
+                                    : "../images/exit.png"
+                    smooth: true
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            console.log("file to remove:", folderModel.get(view.currentIndex, "filePath"))
+                            var fileToRemove = folderModel.get(view.currentIndex, "filePath").replace('file://', '')
+                            utFileManager.removeFile(fileToRemove)
                         }
                     }
                 }
@@ -257,8 +295,12 @@ Image {
             }
 
             model: folderModel
-            spacing: 10
+            //spacing: 10
             delegate: folderDelegate
+            highlight: Rectangle {
+                color: "grey"
+                opacity: 0.7
+            }
 
             SequentialAnimation {
                 id: folderAnimation
@@ -353,11 +395,9 @@ Image {
         }
     }
 
-
-
     Dialog {
         id: errorDialog
-
+        parent: flickable
         anchors.centerIn: parent
         radius: 10
     }

@@ -163,3 +163,6 @@ UBUNTU_TOUCH {
 }
 
 include(qtgameenabler/qtgameenableraudio.pri)
+
+#DISTFILES += \
+#    qtc_packaging/ubuntu_touch/turntable-contenthub.json

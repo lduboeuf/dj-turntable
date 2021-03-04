@@ -84,7 +84,6 @@ int main(int argc, char *argv[])
     UTFileMgr fileManager(sampleFolder);
     engine.rootContext()->setContextProperty("UBUNTU_TOUCH", true);
     engine.rootContext()->setContextProperty("utFileManager", &fileManager);
-    context->setContextProperty("exitButtonVisible", QVariant(true));
 #else
     sampleFolder = QStandardPaths::standardLocations(QStandardPaths::MusicLocation)[0];
 #endif
@@ -94,7 +93,7 @@ int main(int argc, char *argv[])
     //qDebug() << QDir::currentPath();
 
 
-#if defined Q_WS_MAEMO_6 && !defined Q_OS_UBUNTU_TOUCH
+#if defined Q_WS_MAEMO_6 && defined Q_OS_UBUNTU_TOUCH
     // Hide the exit button in Harmattan
     context->setContextProperty("exitButtonVisible", QVariant(false));
 #else
@@ -183,6 +182,14 @@ int main(int argc, char *argv[])
                      SLOT(setDrumButton(QVariant, QVariant, QVariant)));
     QObject::connect(m_drumMachine, SIGNAL(tickChanged(QVariant)),
                      drumMachineQML, SLOT(highlightTick(QVariant)));
+
+#ifdef Q_OS_UBUNTU_TOUCH
+    QObject::connect(&fileManager,  SIGNAL(fileImported(QVariant)),
+                     m_turntable, SLOT(setSample(QVariant)));
+
+//    QObject::connect(fileManager, SIGNAL(fileImported()),
+//                     m_turntable, SLOT(start()));
+#endif
 
     // Framework connections
     //QObject::connect(engine, SIGNAL(quit()), qApp, SLOT(quit()));

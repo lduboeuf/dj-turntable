@@ -80,5 +80,6 @@
         <file>qml/Platform/UbuntuTouch/UTFileImport.qml</file>
         <file>qml/Platform/UbuntuTouch/import.png</file>
         <file>qml/Platform/UbuntuTouch/import_on.png</file>
+        <file>qml/images/eject.png</file>
     </qresource>
 </RCC>
